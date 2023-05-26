@@ -1,7 +1,6 @@
 import "banks";
 import "ram";
 import "nes";
-
 import "common";
 
 namespace entity {

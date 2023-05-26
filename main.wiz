@@ -59,10 +59,8 @@ enum Foo {
 
 in prg {
     import "entity";
-    import "directions"; 
-    import "ai_wander";
-    import "slime";
     import "common";
+    import "slime";
     import "hero";
     import "joy";
     import "random";
@@ -98,8 +96,6 @@ in prg {
         let BG_TILE = 0;
         let FG_TILE = 8;
         tilemap_bg_tile = a = BG_TILE;
-import "rabdom.wiz";
-
         tilemap_fg_tile = a = FG_TILE;
 
         <:tilemap_ptr = a = <:&data.level1;
@@ -188,7 +184,6 @@ import "rabdom.wiz";
 }
 
 in chr {
-    const = embed "bobble_tiles.chr";
+    const = embed "tileset1.chr";
     const = embed "minirpg_sprites.chr";
 }
-import "slime.wiz";
