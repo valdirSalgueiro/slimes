@@ -22,70 +22,54 @@ func clear_nametable_vram() {
 //NAMETABLE_A | (((y) << 5) | (x))
 //NTADR_A(tmp3, tmp2)
 
+func escrever_tile(x_tile : u8 in t0, y_tile : u8 in t1, num_tile : u8 in t2) {
+  var offset_low : u8 in t3;
+  var temp : u8 in t4;
+
+  //Guardar y_tile deslocado de três bits pra quando formos somar no byte mais significativo
+  temp = a = y_tile >>> 3;
+  
+  //Três bits menos significativos de Y são somados no byte menos significativo do resultado
+  a = y_tile <<< 5;
+  offset_low = a |= x_tile;
+
+  nes.ppu.address = a = 0x20 | temp;
+  nes.ppu.address = a = offset_low;
+
+  nes.ppu.data = a = num_tile;
+}
+
 
 func load_tilemap() {
     let START_X = 0;
     let START_Y = 0;
 
     a = nes.ppu.status;
-    var tile @ &t0 : u8;
-    var row @ &t1 : u8;
-    var tile_high @ &t2 : u8;
-    var tile_low @ &t3 : u8;
-    var tile_address @ &t4 : u16;
 
-    row = a = 0;
-    tile_low = a = 0;
-    tile_high = a = 0;
-    for x in 0 .. 239{
-        if { a = x & 15; } && zero
-        {
-            if x != 0
-            {
-                ++row;
-            }
-        }
-        if { a = row - 4; } && zero
-        {
-            row = a = 0;
-            tile_low = a = 0;
-            ++tile_high;
-        }
-        tile = a = row << 5;    
-        b1 = a = tile_low << 1;
-        tile = a = tile + b1;
+    for x in 0 .. 239 {
+        var x_tile : u8 in escrever_tile.x_tile;
+        var y_tile : u8 in escrever_tile.y_tile;
+        var num_tile : u8 in escrever_tile.num_tile;
+        x_tile = a = (x & 15) << 1;
+        y_tile = a = (x >>> 4) << 1;
 
-        <:tile_address = a = <:nes.ppu.ADDRESS_NAMETABLE_DATA + tile;
-        >:tile_address = a = >:nes.ppu.ADDRESS_NAMETABLE_DATA + tile_high;
         
-        nes.ppu.address = a = >:tile_address;
-        nes.ppu.address = a = <:tile_address;
-
         b0 = a = data.level1[x];
-        y = a = b0 << 2; // each metatile is 4 pieces
-        b1 = a = data.ts1[y];
-        nes.ppu.data = a = b1;
-        y++;
-        b1 = a = data.ts1[y];
-        nes.ppu.data = a = b1;
-        y++;
-
-        tile = a = tile + 32;
-        // <:tile_address = a = <:nes.ppu.ADDRESS_NAMETABLE_DATA + tile;
-        >:tile_address = a = >:nes.ppu.ADDRESS_NAMETABLE_DATA + tile_high;
-        nes.ppu.address = a = >:tile_address;
-        // nes.ppu.address = a = <:tile_address;
-
-        // b0 = a = data.level1[x];
-        // y = a = b0 << 2; // each metatile is 4 pieces
-        // b1 = a = data.ts1[y];
-        // nes.ppu.data = a = b1;
-        // y++;
-        // b1 = a = data.ts1[y];
-        // nes.ppu.data = a = b1;
-        // y++;
-
-        ++tile_low;
+        y = a = b0 << 2;
+        num_tile = a = data.ts1[y];;
+        escrever_tile(x_tile,y_tile,num_tile);
+        ++x_tile;
+        ++y;
+        num_tile = a = data.ts1[y];
+        escrever_tile(x_tile,y_tile,num_tile);
+        ++y_tile;
+        ++y;
+        num_tile = a = data.ts1[y];
+        escrever_tile(x_tile,y_tile,num_tile);
+        ++x_tile;
+        ++y;
+        num_tile = a = data.ts1[y];
+        escrever_tile(x_tile,y_tile,num_tile);
     }
 }
 
