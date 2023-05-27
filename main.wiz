@@ -100,24 +100,26 @@ in prg {
 
         <:tilemap_ptr = a = <:&data.level1;
         >:tilemap_ptr = a = >:&data.level1;
+        <:tileset_ptr = a = <:&data.ts1;
+        >:tileset_ptr = a = >:&data.ts1;
         load_tilemap();
-        print_text();
+        // print_text();
 
         joy.init();
         entity.init_system();
         random.init();        
         hero.spawn();
 
-        y = 0;
-        while { a = data.spawns[y]; } && a != 0xFF {
-            t0 = a << 3;
-            y++;
-            t1 = a = data.spawns[y] << 3;
-            y++;
-            a = y; push(a);
-            slime.spawn();
-            y = a = pop();
-        }
+        // y = 0;
+        // while { a = data.spawns[y]; } && a != 0xFF {
+        //     t0 = a << 3;
+        //     y++;
+        //     t1 = a = data.spawns[y] << 3;
+        //     y++;
+        //     a = y; push(a);
+        //     slime.spawn();
+        //     y = a = pop();
+        // }
 
         a = nes.ppu.status; 
         nes.ppu.scroll = a = 0;
