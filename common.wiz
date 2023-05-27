@@ -52,16 +52,18 @@ func load_tilemap() {
         var num_tile : u8 in escrever_tile.num_tile;
         x_tile = a = (x & 15) << 1;
         y_tile = a = (x >>> 4) << 1;
+        b2 = a = x_tile;
 
         
         b0 = a = data.level1[x];
         y = a = b0 << 2;
-        num_tile = a = data.ts1[y];;
+        num_tile = a = data.ts1[y];
         escrever_tile(x_tile,y_tile,num_tile);
         ++x_tile;
         ++y;
         num_tile = a = data.ts1[y];
         escrever_tile(x_tile,y_tile,num_tile);
+        x_tile = a = b2;
         ++y_tile;
         ++y;
         num_tile = a = data.ts1[y];
